@@ -117,16 +117,16 @@ void pubsub::joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
     }
     //右回転
    
-    publisher_->publish(get_frame((pubsub::bidNumber.upperRightwheel+1), 6.28*(x*x+y*y)));
-    publisher_->publish(get_frame((pubsub::bidNumber.upperLeftwheel+1), 6.28f*(x*x+y*y)));
-    publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftwheel+1), 6.28f*(x*x+y*y)));
-    publisher_->publish(get_frame((pubsub::bidNumber.lowerRightwheel+1), 6.28f*(x*x+y*y)));
+    publisher_->publish(get_frame((pubsub::bidNumber.upperRightwheel+1), M_PI*2.0f*(x*x+y*y)));
+    publisher_->publish(get_frame((pubsub::bidNumber.upperLeftwheel+1), M_PI*2.0f*(x*x+y*y)));
+    publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftwheel+1), M_PI*2.0f*(x*x+y*y)));
+    publisher_->publish(get_frame((pubsub::bidNumber.lowerRightwheel+1), M_PI*2.0f*(x*x+y*y)));
     //wheel速度制御
 
-    publisher_->publish(get_frame((pubsub::bidNumber.upperRightsteering+1), r));
-    publisher_->publish(get_frame((pubsub::bidNumber.upperLeftsteering+1), r));
-    publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftsteering+1), r));
-    publisher_->publish(get_frame((pubsub::bidNumber.lowerRightsteering+1), r));
+    publisher_->publish(get_frame((pubsub::bidNumber.upperRightsteering+1), r-M_PI/2));
+    publisher_->publish(get_frame((pubsub::bidNumber.upperLeftsteering+1), r-M_PI/2));
+    publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftsteering+1), r-M_PI/2));
+    publisher_->publish(get_frame((pubsub::bidNumber.lowerRightsteering+1), r-M_PI/2));
     //steering制御
 
     RCLCPP_INFO(this->get_logger(), "Publishing:bokuha warukunai!");
