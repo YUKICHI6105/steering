@@ -1,5 +1,6 @@
 #include <memory>
 #include <string>
+#include <math.h>
 
 #include <rclcpp/rclcpp.hpp>
 #include "can_plugins2/msg/frame.hpp"
@@ -47,16 +48,28 @@ void pubsub::joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
   {  
     RCLCPP_INFO(this->get_logger(), "I heard:");
 
+    if(msg->buttons[3]==true)
+    {
+      publisher_->publish(get_frame(pubsub::bidNumber.upperLeftwheel,static_cast<uint8_t>(0)));
+      publisher_->publish(get_frame(pubsub::bidNumber.upperRightwheel,static_cast<uint8_t>(0)));
+      publisher_->publish(get_frame(pubsub::bidNumber.lowerLeftwheel,static_cast<uint8_t>(0)));
+      publisher_->publish(get_frame(pubsub::bidNumber.lowerRightwheel,static_cast<uint8_t>(0)));
+      publisher_->publish(get_frame(pubsub::bidNumber.upperLeftsteering,static_cast<uint8_t>(3)));
+      publisher_->publish(get_frame(pubsub::bidNumber.upperRightsteering,static_cast<uint8_t>(3)));
+      publisher_->publish(get_frame(pubsub::bidNumber.lowerLeftsteering,static_cast<uint8_t>(3)));
+      publisher_->publish(get_frame(pubsub::bidNumber.lowerRightsteering,static_cast<uint8_t>(3)));
+    }
+
     if(msg->buttons[2]==true)
     {
       publisher_->publish(get_frame(pubsub::bidNumber.upperLeftwheel,static_cast<uint8_t>(5)));
       publisher_->publish(get_frame(pubsub::bidNumber.upperRightwheel,static_cast<uint8_t>(5)));
       publisher_->publish(get_frame(pubsub::bidNumber.lowerLeftwheel,static_cast<uint8_t>(5)));
       publisher_->publish(get_frame(pubsub::bidNumber.lowerRightwheel,static_cast<uint8_t>(5)));
-      publisher_->publish(get_frame(pubsub::bidNumber.upperLeftsteering,static_cast<uint8_t>(5)));
-      publisher_->publish(get_frame(pubsub::bidNumber.upperRightsteering,static_cast<uint8_t>(5)));
-      publisher_->publish(get_frame(pubsub::bidNumber.lowerLeftsteering,static_cast<uint8_t>(5)));
-      publisher_->publish(get_frame(pubsub::bidNumber.lowerRightsteering,static_cast<uint8_t>(5)));
+      publisher_->publish(get_frame(pubsub::bidNumber.upperLeftsteering,static_cast<uint8_t>(6)));
+      publisher_->publish(get_frame(pubsub::bidNumber.upperRightsteering,static_cast<uint8_t>(6)));
+      publisher_->publish(get_frame(pubsub::bidNumber.lowerLeftsteering,static_cast<uint8_t>(6)));
+      publisher_->publish(get_frame(pubsub::bidNumber.lowerRightsteering,static_cast<uint8_t>(6)));
     }
 
     if(msg->buttons[1]==true)
@@ -73,29 +86,47 @@ void pubsub::joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
 
     float x= -(msg->axes[0]);
     float y=  (msg->axes[1]);
-/*    float r= 0;
+    float r= acosf(x/sqrt(x*x+y*y));
+
     if(msg->buttons[4]==true){
-      r =1.0f;
+      publisher_->publish(get_frame((pubsub::bidNumber.upperRightwheel+1), M_PI));
+      publisher_->publish(get_frame((pubsub::bidNumber.upperLeftwheel+1), M_PI));
+      publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftwheel+1), M_PI));
+      publisher_->publish(get_frame((pubsub::bidNumber.lowerRightwheel+1), M_PI));
+      //wheel速度制御
+
+      publisher_->publish(get_frame((pubsub::bidNumber.upperRightsteering+1), M_PI/4));
+      publisher_->publish(get_frame((pubsub::bidNumber.upperLeftsteering+1), M_PI*3/4));
+      publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftsteering+1), M_PI*5/4));
+      publisher_->publish(get_frame((pubsub::bidNumber.lowerRightsteering+1), M_PI*7/4));
+      //steering制御
     }
     //↑左回転
     else if(msg->buttons[5]==true){
-      r =-1.0f;
+      publisher_->publish(get_frame((pubsub::bidNumber.upperRightwheel+1), -M_PI));
+      publisher_->publish(get_frame((pubsub::bidNumber.upperLeftwheel+1), -M_PI));
+      publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftwheel+1), -M_PI));
+      publisher_->publish(get_frame((pubsub::bidNumber.lowerRightwheel+1), -M_PI));
+      //wheel速度制御
+
+      publisher_->publish(get_frame((pubsub::bidNumber.upperRightsteering+1), M_PI/4));
+      publisher_->publish(get_frame((pubsub::bidNumber.upperLeftsteering+1), M_PI*3/4));
+      publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftsteering+1), M_PI*5/4));
+      publisher_->publish(get_frame((pubsub::bidNumber.lowerRightsteering+1), M_PI*7/4));
+      //steering制御
     }
     //右回転
-    else if(msg->buttons[4] == msg->buttons[5]){
-      r =0.0f;
-    }
-*/    
+   
     publisher_->publish(get_frame((pubsub::bidNumber.upperRightwheel+1), 6.28*(x*x+y*y)));
     publisher_->publish(get_frame((pubsub::bidNumber.upperLeftwheel+1), 6.28f*(x*x+y*y)));
     publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftwheel+1), 6.28f*(x*x+y*y)));
     publisher_->publish(get_frame((pubsub::bidNumber.lowerRightwheel+1), 6.28f*(x*x+y*y)));
     //wheel速度制御
 
-    publisher_->publish(get_frame((pubsub::bidNumber.upperRightsteering+1), 0));
-    publisher_->publish(get_frame((pubsub::bidNumber.upperLeftsteering+1), 0));
-    publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftsteering+1), 0));
-    publisher_->publish(get_frame((pubsub::bidNumber.lowerRightsteering+1), 0));
+    publisher_->publish(get_frame((pubsub::bidNumber.upperRightsteering+1), r));
+    publisher_->publish(get_frame((pubsub::bidNumber.upperLeftsteering+1), r));
+    publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftsteering+1), r));
+    publisher_->publish(get_frame((pubsub::bidNumber.lowerRightsteering+1), r));
     //steering制御
 
     RCLCPP_INFO(this->get_logger(), "Publishing:bokuha warukunai!");
