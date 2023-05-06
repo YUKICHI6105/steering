@@ -1,0 +1,9 @@
+<launch>
+
+  <node pkg="joy" exec="joy_node" name="joy_node">
+  </node>
+
+  <node pkg="steering" exec="steering4_node" name="steering4_node">
+  </node>
+
+</launch>
