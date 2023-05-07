@@ -86,7 +86,7 @@ void pubsub::joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
 
     float x= -(msg->axes[0]);
     float y=  (msg->axes[1]);
-    float θ= acosf(x/sqrt(x*x+y*y));
+    float theta = acosf(x/sqrt(x*x+y*y));
 
     if(msg->buttons[4]==true){
       publisher_->publish(get_frame((pubsub::bidNumber.upperRightwheel+1), M_PI));
@@ -123,10 +123,10 @@ void pubsub::joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
     publisher_->publish(get_frame((pubsub::bidNumber.lowerRightwheel+1), M_PI*2.0f*(x*x+y*y)));
     //wheel速度制御
 
-    publisher_->publish(get_frame((pubsub::bidNumber.upperRightsteering+1), θ-M_PI/2));
-    publisher_->publish(get_frame((pubsub::bidNumber.upperLeftsteering+1), θ-M_PI/2));
-    publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftsteering+1), θ-M_PI/2));
-    publisher_->publish(get_frame((pubsub::bidNumber.lowerRightsteering+1), θ-M_PI/2));
+    publisher_->publish(get_frame((pubsub::bidNumber.upperRightsteering+1), theta-M_PI/2));
+    publisher_->publish(get_frame((pubsub::bidNumber.upperLeftsteering+1), theta-M_PI/2));
+    publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftsteering+1), theta-M_PI/2));
+    publisher_->publish(get_frame((pubsub::bidNumber.lowerRightsteering+1), theta-M_PI/2));
     //steering制御
 
     RCLCPP_INFO(this->get_logger(), "Publishing:bokuha warukunai!");
@@ -134,6 +134,7 @@ void pubsub::joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
 
 int main(int argc, char * argv[])
 {
+  pubsub pubSub;
   rclcpp::init(argc, argv);
   rclcpp::spin(std::make_shared<pubsub>());
   rclcpp::shutdown();
