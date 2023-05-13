@@ -116,20 +116,22 @@ void pubsub::joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
       //steering制御
     }
     //右回転
-   
-    publisher_->publish(get_frame((pubsub::bidNumber.upperRightwheel+1), M_PI*2.0f*(x*x+y*y)));
-    publisher_->publish(get_frame((pubsub::bidNumber.upperLeftwheel+1), M_PI*2.0f*(x*x+y*y)));
-    publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftwheel+1), M_PI*2.0f*(x*x+y*y)));
-    publisher_->publish(get_frame((pubsub::bidNumber.lowerRightwheel+1), M_PI*2.0f*(x*x+y*y)));
-    //wheel速度制御
 
-    publisher_->publish(get_frame((pubsub::bidNumber.upperRightsteering+1), theta-M_PI/2));
-    publisher_->publish(get_frame((pubsub::bidNumber.upperLeftsteering+1), theta-M_PI/2));
-    publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftsteering+1), theta-M_PI/2));
-    publisher_->publish(get_frame((pubsub::bidNumber.lowerRightsteering+1), theta-M_PI/2));
-    //steering制御
+    if(x>0.05 || y>0.05){
+      publisher_->publish(get_frame((pubsub::bidNumber.upperRightwheel+1), M_PI*2.0f*(x*x+y*y)));
+      publisher_->publish(get_frame((pubsub::bidNumber.upperLeftwheel+1), M_PI*2.0f*(x*x+y*y)));
+      publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftwheel+1), M_PI*2.0f*(x*x+y*y)));
+      publisher_->publish(get_frame((pubsub::bidNumber.lowerRightwheel+1), M_PI*2.0f*(x*x+y*y)));
+      //wheel速度制御
 
-    RCLCPP_INFO(this->get_logger(), "Publishing:bokuha warukunai!");
+      publisher_->publish(get_frame((pubsub::bidNumber.upperRightsteering+1), theta-M_PI/2));
+      publisher_->publish(get_frame((pubsub::bidNumber.upperLeftsteering+1), theta-M_PI/2));
+      publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftsteering+1), theta-M_PI/2));
+      publisher_->publish(get_frame((pubsub::bidNumber.lowerRightsteering+1), theta-M_PI/2));
+      //steering制御
+
+      RCLCPP_INFO(this->get_logger(), "Publishing:bokuha warukunai!");
+    }
   }
 
 int main(int argc, char * argv[])

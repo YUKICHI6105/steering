@@ -16,7 +16,14 @@ find_package(can_plugins2 REQUIRED)
 # find_package(<dependency> REQUIRED)
 
 add_executable(steering4_node src/steering4.cpp)
+add_executable(steering3_node src/steering3.cpp)
 ament_target_dependencies(steering4_node
+  rclcpp
+  std_msgs
+  sensor_msgs
+  can_plugins2
+)
+ament_target_dependencies(steering3_node
   rclcpp
   std_msgs
   sensor_msgs
@@ -33,7 +40,7 @@ install(DIRECTORY
   DESTINATION share/${PROJECT_NAME}/
 )
 
-install(TARGETS steering4_node
+install(TARGETS steering4_node steering3_node
   DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
