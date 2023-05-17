@@ -136,7 +136,6 @@ void pubsub::joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
 
 int main(int argc, char * argv[])
 {
-  pubsub pubSub;
   rclcpp::init(argc, argv);
   rclcpp::spin(std::make_shared<pubsub>());
   rclcpp::shutdown();
