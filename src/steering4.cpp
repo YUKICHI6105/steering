@@ -5,7 +5,10 @@
 #include <rclcpp/rclcpp.hpp>
 #include "can_plugins2/msg/frame.hpp"
 #include <sensor_msgs/msg/joy.hpp>
+#include "can_plugins2/msg/robomas_frame.hpp"
+#include "can_plugins2/msg/robomas_target.hpp"
 #include "../include/can_utils.hpp"
+#include "../include/robomas_utils.hpp"
 
 
 using std::placeholders::_1;
@@ -32,6 +35,11 @@ class pubsub : public rclcpp::Node
     pubsub() : Node("steering4_node"), count_(0)
     {
       publisher_ = this->create_publisher<can_plugins2::msg::Frame>("can_tx", 10);
+      robomas_pub_ = this->create_publisher<can_plugins2::msg::RobomasFrame>("robomaster", 10);
+      robomas_pub1_ = this->create_publisher<can_plugins2::msg::RobomasTarget>("robomaster_target1", 10);
+      robomas_pub2_ = this->create_publisher<can_plugins2::msg::RobomasTarget>("robomaster_target2", 10);
+      robomas_pub3_ = this->create_publisher<can_plugins2::msg::RobomasTarget>("robomaster_target3", 10);
+      robomas_pub4_ = this->create_publisher<can_plugins2::msg::RobomasTarget>("robomaster_target4", 10);
       subscriber_ = this->create_subscription<sensor_msgs::msg::Joy>("joy", 10, std::bind(&pubsub::joy_callback, this, _1));
     }
 
@@ -40,6 +48,11 @@ class pubsub : public rclcpp::Node
     void joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg);
     rclcpp::TimerBase::SharedPtr timer_;
     rclcpp::Publisher<can_plugins2::msg::Frame>::SharedPtr publisher_;
+    rclcpp::Publisher<can_plugins2::msg::RobomasFrame>::SharedPtr robomas_pub_;
+    rclcpp::Publisher<can_plugins2::msg::RobomasTarget>::SharedPtr robomas_pub1_;
+    rclcpp::Publisher<can_plugins2::msg::RobomasTarget>::SharedPtr robomas_pub2_;
+    rclcpp::Publisher<can_plugins2::msg::RobomasTarget>::SharedPtr robomas_pub3_;
+    rclcpp::Publisher<can_plugins2::msg::RobomasTarget>::SharedPtr robomas_pub4_;
     rclcpp::Subscription<sensor_msgs::msg::Joy>::SharedPtr subscriber_;
     size_t count_;
 };
@@ -50,10 +63,10 @@ void pubsub::joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
 
     if(msg->buttons[3]==true)
     {
-      publisher_->publish(get_frame(pubsub::bidNumber.upperLeftwheel,static_cast<uint8_t>(0)));
-      publisher_->publish(get_frame(pubsub::bidNumber.upperRightwheel,static_cast<uint8_t>(0)));
-      publisher_->publish(get_frame(pubsub::bidNumber.lowerLeftwheel,static_cast<uint8_t>(0)));
-      publisher_->publish(get_frame(pubsub::bidNumber.lowerRightwheel,static_cast<uint8_t>(0)));
+      //publisher_->publish(get_frame(pubsub::bidNumber.upperLeftwheel,static_cast<uint8_t>(0)));
+      //publisher_->publish(get_frame(pubsub::bidNumber.upperRightwheel,static_cast<uint8_t>(0)));
+      //publisher_->publish(get_frame(pubsub::bidNumber.lowerLeftwheel,static_cast<uint8_t>(0)));
+      //publisher_->publish(get_frame(pubsub::bidNumber.lowerRightwheel,static_cast<uint8_t>(0)));
       publisher_->publish(get_frame(pubsub::bidNumber.upperLeftsteering,static_cast<uint8_t>(3)));
       publisher_->publish(get_frame(pubsub::bidNumber.upperRightsteering,static_cast<uint8_t>(3)));
       publisher_->publish(get_frame(pubsub::bidNumber.lowerLeftsteering,static_cast<uint8_t>(3)));
@@ -62,10 +75,14 @@ void pubsub::joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
 
     if(msg->buttons[2]==true)
     {
-      publisher_->publish(get_frame(pubsub::bidNumber.upperLeftwheel,static_cast<uint8_t>(5)));
-      publisher_->publish(get_frame(pubsub::bidNumber.upperRightwheel,static_cast<uint8_t>(5)));
-      publisher_->publish(get_frame(pubsub::bidNumber.lowerLeftwheel,static_cast<uint8_t>(5)));
-      publisher_->publish(get_frame(pubsub::bidNumber.lowerRightwheel,static_cast<uint8_t>(5)));
+      //publisher_->publish(get_frame(pubsub::bidNumber.upperLeftwheel,static_cast<uint8_t>(5)));
+      //publisher_->publish(get_frame(pubsub::bidNumber.upperRightwheel,static_cast<uint8_t>(5)));
+      //publisher_->publish(get_frame(pubsub::bidNumber.lowerLeftwheel,static_cast<uint8_t>(5)));
+      //publisher_->publish(get_frame(pubsub::bidNumber.lowerRightwheel,static_cast<uint8_t>(5)));
+      robomas_pub_->publish(get_robomas_frame(0,1,50,30.0,22.0,5.0,10000.0));
+      robomas_pub_->publish(get_robomas_frame(1,1,50,30.0,22.0,5.0,10000.0));
+      robomas_pub_->publish(get_robomas_frame(2,1,50,30.0,22.0,5.0,10000.0));
+      robomas_pub_->publish(get_robomas_frame(3,1,50,30.0,22.0,5.0,10000.0));
       publisher_->publish(get_frame(pubsub::bidNumber.upperLeftsteering,static_cast<uint8_t>(6)));
       publisher_->publish(get_frame(pubsub::bidNumber.upperRightsteering,static_cast<uint8_t>(6)));
       publisher_->publish(get_frame(pubsub::bidNumber.lowerLeftsteering,static_cast<uint8_t>(6)));
@@ -74,10 +91,14 @@ void pubsub::joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
 
     if(msg->buttons[1]==true)
     {
-      publisher_->publish(get_frame(pubsub::bidNumber.upperLeftwheel,static_cast<uint8_t>(0)));
-      publisher_->publish(get_frame(pubsub::bidNumber.upperRightwheel,static_cast<uint8_t>(0)));
-      publisher_->publish(get_frame(pubsub::bidNumber.lowerLeftwheel,static_cast<uint8_t>(0)));
-      publisher_->publish(get_frame(pubsub::bidNumber.lowerRightwheel,static_cast<uint8_t>(0)));
+      // publisher_->publish(get_frame(pubsub::bidNumber.upperLeftwheel,static_cast<uint8_t>(0)));
+      // publisher_->publish(get_frame(pubsub::bidNumber.upperRightwheel,static_cast<uint8_t>(0)));
+      // publisher_->publish(get_frame(pubsub::bidNumber.lowerLeftwheel,static_cast<uint8_t>(0)));
+      // publisher_->publish(get_frame(pubsub::bidNumber.lowerRightwheel,static_cast<uint8_t>(0)));
+      robomas_pub_->publish(get_robomas_frame(0,0,50,30.0,22.0,5.0,10000.0));
+      robomas_pub_->publish(get_robomas_frame(1,0,50,30.0,22.0,5.0,10000.0));
+      robomas_pub_->publish(get_robomas_frame(2,0,50,30.0,22.0,5.0,10000.0));
+      robomas_pub_->publish(get_robomas_frame(3,0,50,30.0,22.0,5.0,10000.0));
       publisher_->publish(get_frame(pubsub::bidNumber.upperLeftsteering,static_cast<uint8_t>(0)));
       publisher_->publish(get_frame(pubsub::bidNumber.upperRightsteering,static_cast<uint8_t>(0)));
       publisher_->publish(get_frame(pubsub::bidNumber.lowerLeftsteering,static_cast<uint8_t>(0)));
@@ -89,10 +110,14 @@ void pubsub::joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
     float theta = acosf(x/sqrt(x*x+y*y));
 
     if(msg->buttons[4]==true){
-      publisher_->publish(get_frame((pubsub::bidNumber.upperRightwheel+1), M_PI));
-      publisher_->publish(get_frame((pubsub::bidNumber.upperLeftwheel+1), M_PI));
-      publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftwheel+1), M_PI));
-      publisher_->publish(get_frame((pubsub::bidNumber.lowerRightwheel+1), M_PI));
+      // publisher_->publish(get_frame((pubsub::bidNumber.upperRightwheel+1), M_PI));
+      // publisher_->publish(get_frame((pubsub::bidNumber.upperLeftwheel+1), M_PI));
+      // publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftwheel+1), M_PI));
+      // publisher_->publish(get_frame((pubsub::bidNumber.lowerRightwheel+1), M_PI));
+      robomas_pub1_->publish(get_robomas_target(M_PI));
+      robomas_pub2_->publish(get_robomas_target(M_PI));
+      robomas_pub3_->publish(get_robomas_target(M_PI));
+      robomas_pub4_->publish(get_robomas_target(M_PI));
       //wheel速度制御
 
       publisher_->publish(get_frame((pubsub::bidNumber.upperRightsteering+1), M_PI/4));
@@ -103,10 +128,14 @@ void pubsub::joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
     }
     //↑左回転
     else if(msg->buttons[5]==true){
-      publisher_->publish(get_frame((pubsub::bidNumber.upperRightwheel+1), -M_PI));
-      publisher_->publish(get_frame((pubsub::bidNumber.upperLeftwheel+1), -M_PI));
-      publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftwheel+1), -M_PI));
-      publisher_->publish(get_frame((pubsub::bidNumber.lowerRightwheel+1), -M_PI));
+      // publisher_->publish(get_frame((pubsub::bidNumber.upperRightwheel+1), -M_PI));
+      // publisher_->publish(get_frame((pubsub::bidNumber.upperLeftwheel+1), -M_PI));
+      // publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftwheel+1), -M_PI));
+      // publisher_->publish(get_frame((pubsub::bidNumber.lowerRightwheel+1), -M_PI));
+      robomas_pub1_->publish(get_robomas_target(M_PI));
+      robomas_pub2_->publish(get_robomas_target(M_PI));
+      robomas_pub3_->publish(get_robomas_target(M_PI));
+      robomas_pub4_->publish(get_robomas_target(M_PI));
       //wheel速度制御
 
       publisher_->publish(get_frame((pubsub::bidNumber.upperRightsteering+1), M_PI/4));
@@ -118,10 +147,14 @@ void pubsub::joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
     //右回転
 
     if(x>0.05 || y>0.05){
-      publisher_->publish(get_frame((pubsub::bidNumber.upperRightwheel+1), M_PI*2.0f*(x*x+y*y)));
-      publisher_->publish(get_frame((pubsub::bidNumber.upperLeftwheel+1), M_PI*2.0f*(x*x+y*y)));
-      publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftwheel+1), M_PI*2.0f*(x*x+y*y)));
-      publisher_->publish(get_frame((pubsub::bidNumber.lowerRightwheel+1), M_PI*2.0f*(x*x+y*y)));
+      // publisher_->publish(get_frame((pubsub::bidNumber.upperRightwheel+1), M_PI*2.0f*(x*x+y*y)));
+      // publisher_->publish(get_frame((pubsub::bidNumber.upperLeftwheel+1), M_PI*2.0f*(x*x+y*y)));
+      // publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftwheel+1), M_PI*2.0f*(x*x+y*y)));
+      // publisher_->publish(get_frame((pubsub::bidNumber.lowerRightwheel+1), M_PI*2.0f*(x*x+y*y)));
+      robomas_pub1_->publish(get_robomas_target(M_PI*2.0f*(x*x+y*y)));
+      robomas_pub2_->publish(get_robomas_target(M_PI*2.0f*(x*x+y*y)));
+      robomas_pub3_->publish(get_robomas_target(M_PI*2.0f*(x*x+y*y)));
+      robomas_pub4_->publish(get_robomas_target(M_PI*2.0f*(x*x+y*y)));
       //wheel速度制御
 
       publisher_->publish(get_frame((pubsub::bidNumber.upperRightsteering+1), theta-M_PI/2));
