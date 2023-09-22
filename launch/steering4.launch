@@ -6,4 +6,6 @@
   <node pkg="steering" exec="steering4_node" name="steering4_node">
   </node>
 
+  <include file="$(find-pkg-share can_plugins2)/launch/slcan_bridge_launch.xml"/>
+
 </launch>

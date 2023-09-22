@@ -3,9 +3,7 @@
 
 static std::unique_ptr<can_plugins2::msg::RobomasFrame> get_robomas_frame(const uint8_t motor,const uint8_t mode, const uint8_t temp, const float kp, const float ki, const float kd, const float limitie){
   auto msg = std::make_unique<can_plugins2::msg::RobomasFrame>();
-  if(motor < 8){
-    msg->motor = 0x30 + motor;
-  }
+  msg->motor = motor;
   msg->mode = mode;
   msg->temp = temp;
   msg->kp = kp;
