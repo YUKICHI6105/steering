@@ -13,9 +13,6 @@
 
 using std::placeholders::_1;
 
-/* This example creates a subclass of Node and uses std::bind() to register a
-* member function as a callback from the timer. */
-
 struct BIDNumber
 {
   uint32_t solenoidValve      = 0x100;
@@ -80,10 +77,10 @@ void pubsub::joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
       //publisher_->publish(get_frame(pubsub::bidNumber.upperRightwheel,static_cast<uint8_t>(5)));
       //publisher_->publish(get_frame(pubsub::bidNumber.lowerLeftwheel,static_cast<uint8_t>(5)));
       //publisher_->publish(get_frame(pubsub::bidNumber.lowerRightwheel,static_cast<uint8_t>(5)));
-      robomas_pub_->publish(get_robomas_frame(0,1,50,30.0,22.0,5.0,10000.0));
-      robomas_pub_->publish(get_robomas_frame(1,1,50,30.0,22.0,5.0,10000.0));
-      robomas_pub_->publish(get_robomas_frame(2,1,50,30.0,22.0,5.0,10000.0));
-      robomas_pub_->publish(get_robomas_frame(3,1,50,30.0,22.0,5.0,10000.0));
+      robomas_pub_->publish(get_robomas_frame(0,1,50,30.0,22.0,5.0,1000.0));
+      robomas_pub_->publish(get_robomas_frame(1,1,50,30.0,22.0,5.0,1000.0));
+      robomas_pub_->publish(get_robomas_frame(2,1,50,30.0,22.0,5.0,1000.0));
+      robomas_pub_->publish(get_robomas_frame(3,1,50,30.0,22.0,5.0,1000.0));
       publisher_->publish(get_frame(pubsub::bidNumber.upperLeftsteering,static_cast<uint8_t>(6)));
       publisher_->publish(get_frame(pubsub::bidNumber.upperRightsteering,static_cast<uint8_t>(6)));
       publisher_->publish(get_frame(pubsub::bidNumber.lowerLeftsteering,static_cast<uint8_t>(6)));
@@ -96,10 +93,10 @@ void pubsub::joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
       // publisher_->publish(get_frame(pubsub::bidNumber.upperRightwheel,static_cast<uint8_t>(0)));
       // publisher_->publish(get_frame(pubsub::bidNumber.lowerLeftwheel,static_cast<uint8_t>(0)));
       // publisher_->publish(get_frame(pubsub::bidNumber.lowerRightwheel,static_cast<uint8_t>(0)));
-      robomas_pub_->publish(get_robomas_frame(0,0,50,30.0,22.0,5.0,10000.0));
-      robomas_pub_->publish(get_robomas_frame(1,0,50,30.0,22.0,5.0,10000.0));
-      robomas_pub_->publish(get_robomas_frame(2,0,50,30.0,22.0,5.0,10000.0));
-      robomas_pub_->publish(get_robomas_frame(3,0,50,30.0,22.0,5.0,10000.0));
+      robomas_pub_->publish(get_robomas_frame(0,0,50,30.0,22.0,5.0,1000.0));
+      robomas_pub_->publish(get_robomas_frame(1,0,50,30.0,22.0,5.0,1000.0));
+      robomas_pub_->publish(get_robomas_frame(2,0,50,30.0,22.0,5.0,1000.0));
+      robomas_pub_->publish(get_robomas_frame(3,0,50,30.0,22.0,5.0,1000.0));
       publisher_->publish(get_frame(pubsub::bidNumber.upperLeftsteering,static_cast<uint8_t>(0)));
       publisher_->publish(get_frame(pubsub::bidNumber.upperRightsteering,static_cast<uint8_t>(0)));
       publisher_->publish(get_frame(pubsub::bidNumber.lowerLeftsteering,static_cast<uint8_t>(0)));
@@ -108,7 +105,7 @@ void pubsub::joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
 
     float x= -(msg->axes[0]);
     float y=  (msg->axes[1]);
-    //float theta = acosf(x/sqrt(x*x+y*y));
+    float theta = acosf(x/sqrt(x*x+y*y));
 
     if(msg->buttons[4]==true){
       // publisher_->publish(get_frame((pubsub::bidNumber.upperRightwheel+1), M_PI));
@@ -158,10 +155,10 @@ void pubsub::joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
       robomas_pub4_->publish(get_robomas_target(M_PI*2.0f*(x*x+y*y)*100));
       //wheel速度制御
 
-      // publisher_->publish(get_frame((pubsub::bidNumber.upperRightsteering+1), theta-M_PI/2));
-      // publisher_->publish(get_frame((pubsub::bidNumber.upperLeftsteering+1), theta-M_PI/2));
-      // publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftsteering+1), theta-M_PI/2));
-      // publisher_->publish(get_frame((pubsub::bidNumber.lowerRightsteering+1), theta-M_PI/2));
+      publisher_->publish(get_frame((pubsub::bidNumber.upperRightsteering+1), theta-M_PI/2));
+      publisher_->publish(get_frame((pubsub::bidNumber.upperLeftsteering+1), theta-M_PI/2));
+      publisher_->publish(get_frame((pubsub::bidNumber.lowerLeftsteering+1), theta-M_PI/2));
+      publisher_->publish(get_frame((pubsub::bidNumber.lowerRightsteering+1), theta-M_PI/2));
       //steering制御
 
       RCLCPP_INFO(this->get_logger(), "Publishing:bokuha warukunai!");
@@ -172,6 +169,7 @@ void pubsub::joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
         robomas_pub2_->publish(get_robomas_target(0));
         robomas_pub3_->publish(get_robomas_target(0));
         robomas_pub4_->publish(get_robomas_target(0));
+        //wheel速度制御
         count = 0;
       }
     }
