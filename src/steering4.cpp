@@ -105,8 +105,8 @@ void pubsub::joy_callback(const sensor_msgs::msg::Joy::SharedPtr msg)
 
     float x= -(msg->axes[0]);
     float y=  (msg->axes[1]);
-    float theta = acosf(x/sqrt(x*x+y*y));
-
+    float theta = std::atan2(y, x) * 5 / 2;
+  
     if(msg->buttons[4]==true){
       // publisher_->publish(get_frame((pubsub::bidNumber.upperRightwheel+1), M_PI));
       // publisher_->publish(get_frame((pubsub::bidNumber.upperLeftwheel+1), M_PI));
